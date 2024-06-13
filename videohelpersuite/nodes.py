@@ -218,6 +218,7 @@ class VideoCombine:
                 "save_output": ("BOOLEAN", {"default": True}),
             },
             "optional": {
+                "filename_explicit": ("STRING",{"default": ""}),
                 "audio": ("VHS_AUDIO",),
                 "meta_batch": ("VHS_BatchManager",)
             },
@@ -239,12 +240,13 @@ class VideoCombine:
         images,
         frame_rate: int,
         loop_count: int,
-        filename_prefix="AnimateDiff",
+        filename_prefix="AnimateDiff",        
         format="image/gif",
         pingpong=False,
         save_output=True,
         prompt=None,
         extra_pnginfo=None,
+        filename_explicit="",
         audio=None,
         unique_id=None,
         manual_format_widgets=None,
@@ -305,15 +307,17 @@ class VideoCombine:
             counter = max_counter + 1
             output_process = None
 
+            
         # save first frame as png to keep metadata
-        file = f"{filename}_{counter:05}.png"
-        file_path = os.path.join(full_output_folder, file)
-        Image.fromarray(tensor_to_bytes(first_image)).save(
-            file_path,
-            pnginfo=metadata,
-            compress_level=4,
-        )
-        output_files.append(file_path)
+        # file = f"{filename}_{counter:05}.png"
+        # file_path = os.path.join(full_output_folder, file)
+            
+        #Image.fromarray(tensor_to_bytes(first_image)).save(
+        #    file_path,
+        #    pnginfo=metadata,
+        #    compress_level=4,
+        #)
+        #output_files.append(file_path)
 
         format_type, format_ext = format.split("/")
         if format_type == "image":
@@ -410,6 +414,8 @@ class VideoCombine:
                     i_pix_fmt = 'rgb24'
             file = f"{filename}_{counter:05}.{video_format['extension']}"
             file_path = os.path.join(full_output_folder, file)
+            if (len(filename_explicit) > 0):
+                file_path = filename_explicit
             bitrate_arg = []
             bitrate = video_format.get('bitrate')
             if bitrate is not None:
