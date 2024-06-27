@@ -100,7 +100,11 @@ def tensor_to_bytes(tensor):
     return tensor_to_int(tensor, 8).astype(np.uint8)
 
 def ffmpeg_process(args, video_format, video_metadata, file_path, env):
-
+    try:
+        os.remove(file_path)
+    except OSError:
+        pass
+        
     res = None
     frame_data = yield
     total_frames_output = 0
